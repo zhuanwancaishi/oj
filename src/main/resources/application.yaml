@@ -6,9 +6,22 @@ spring:
     username: root
     password: 818923
     driverClassName: com.mysql.cj.jdbc.Driver
-
+  application:
+    name: spirng-boot-rabbitmq-sender
+  rabbitmq:
+    host: 120.78.156.16
+    port: 5672
+    username: wangx
+    password: 818923
+    virtual-host: /
+    connection-timeout: 15000
+    publisher-returns: true
+    template:
+      mandatory: true
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.wangx.oj.entity
   configuration:
     map-underscore-to-camel-case: true
+
+

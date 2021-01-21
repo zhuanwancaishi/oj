@@ -62,6 +62,21 @@
 			<artifactId>druid</artifactId>
 			<version>1.1.6</version>
 		</dependency>
+
+		<!-- 添加springboot对amqp的支持 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.73</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
