@@ -9,4 +9,8 @@
         insert into t_announce (uid,content,create_time,update_time)
         values (#{uid}, #{content}, #{createTime},#{updateTime})
     </insert>
+
+    <delete id="deleteOne">
+        delete from t_announce where aid=#{aid}
+    </delete>
 </mapper>

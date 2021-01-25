@@ -13,4 +13,6 @@ public class User {
     private String password;
     private String email;
     private String tel;
+    private Integer level;// 初始分数 1500分
+    private Integer authority;//0 正常用户 1 管理员 -1 封禁用户
 }

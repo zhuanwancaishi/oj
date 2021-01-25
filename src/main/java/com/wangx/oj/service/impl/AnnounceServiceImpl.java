@@ -27,5 +27,11 @@ public class AnnounceServiceImpl implements AnnounceService {
         return Result.success(null);
     }
 
+    @Override
+    public Result deleteAnnounce(Announce announce) {
+        announceMapper.deleteOne(announce);
+        return Result.success(null);
+    }
+
 
 }

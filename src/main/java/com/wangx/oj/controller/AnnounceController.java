@@ -23,4 +23,9 @@ public class AnnounceController {
     Result add(@RequestBody Announce announce) {
         return announceService.publishAnnounce(announce);
     }
+
+    @RequestMapping("/delete")
+    Result delete(@RequestBody Announce announce) {
+        return announceService.deleteAnnounce(announce);
+    }
 }

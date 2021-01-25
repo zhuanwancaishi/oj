@@ -6,4 +6,5 @@ import com.wangx.oj.entity.Announce;
 public interface AnnounceService {
     Result findAll();
     Result publishAnnounce(Announce announce);
+    Result deleteAnnounce(Announce announce);
 }

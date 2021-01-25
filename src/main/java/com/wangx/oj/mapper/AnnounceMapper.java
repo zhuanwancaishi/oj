@@ -10,4 +10,6 @@ public interface AnnounceMapper {
     List<Announce> findAll();
 
     void insertOne(Announce announce);
+
+    void deleteOne(Announce announce);
 }
