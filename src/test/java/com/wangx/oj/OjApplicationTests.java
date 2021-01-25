@@ -1,9 +1,7 @@
 package com.wangx.oj;
 
 import com.alibaba.fastjson.JSON;
-import com.wangx.oj.common.Result;
-import com.wangx.oj.common.Sender;
-import jdk.nashorn.internal.parser.JSONParser;
+import com.wangx.oj.entity.Submit;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +15,28 @@ import java.util.Map;
 @SpringBootTest
 class OjApplicationTests {
 
-	@Autowired
-	private Sender sender;
+
 
 	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-	@Test
-	public void testSender1() throws Exception {
-		Map<String, Object> properties = new HashMap<>();
-		properties.put("number", "12345");
-		properties.put("send_time", simpleDateFormat.format(new Date()));
-		sender.send("Hello RabbitMQ For Spring Boot!", properties);
-	}
 
 	@Autowired
 	AmqpTemplate amqpTemplate;
 	@Test
 	public void testSender2() throws Exception {
-		String data = JSON.toJSONString(Result.success("success"));
+		Submit submit = new Submit();
+		submit.setCode("#include<stdio.h>\nint main(){\nint a=0,b=0;\nscanf(\"%d %d\",&a, &b);\nprintf(\"%d\",a+b);\nreturn 0;\n}");
+		submit.setInput("1 1");
+		submit.setOutput("2");
+		submit.setType(1);
+		String data = JSON.toJSONString(submit);
 		amqpTemplate.convertAndSend("judge", data);
+	}
+
+	@Test
+	public void testReceiver() throws Exception {
+		Object result = amqpTemplate.receiveAndConvert("result");
+
 	}
 
 }

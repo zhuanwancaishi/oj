@@ -23,5 +23,10 @@ mybatis:
   type-aliases-package: com.wangx.oj.entity
   configuration:
     map-underscore-to-camel-case: true
-
-
+logging:
+  file:
+    path: "./logs"
+    max-history: 30
+    max-size: 15MB
+  pattern:
+    file: "oj.%d{yyyy-MM-dd}.log"
