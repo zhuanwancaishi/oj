@@ -33,5 +33,10 @@ public class AnnounceServiceImpl implements AnnounceService {
         return Result.success(null);
     }
 
+    @Override
+    public Result findByAid(Announce announce) {
+        return Result.success(announceMapper.findByAid(announce));
+    }
+
 
 }

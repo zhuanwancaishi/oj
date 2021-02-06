@@ -18,11 +18,18 @@ spring:
     publisher-returns: true
     template:
       mandatory: true
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.wangx.oj.entity
-  configuration:
-    map-underscore-to-camel-case: true
+  redis:
+    database: 0
+    host: 120.78.156.16
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 200
+        max-wait: -1
+        max-idle: 10
+        min-idle: 0
+    timeout: 5000
 logging:
   file:
     path: "./logs"
@@ -30,3 +37,20 @@ logging:
     max-size: 15MB
   pattern:
     file: "oj.%d{yyyy-MM-dd}.log"
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+      field-strategy: not_empty
+      #驼峰下划线转换
+      column-underline: true
+      #逻辑删除配置
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+      db-type: mysql
+    refresh: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  mapper-locations: /mapper/*.xml
+  type-aliases-package: com.wangx.oj.entity

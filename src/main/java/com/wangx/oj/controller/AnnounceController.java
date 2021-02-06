@@ -28,4 +28,9 @@ public class AnnounceController {
     Result delete(@RequestBody Announce announce) {
         return announceService.deleteAnnounce(announce);
     }
+
+    @RequestMapping("/findByAid")
+    Result findByAid(@RequestBody Announce announce) {
+        return announceService.findByAid(announce);
+    }
 }

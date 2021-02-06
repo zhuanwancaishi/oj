@@ -13,4 +13,8 @@
     <delete id="deleteOne">
         delete from t_announce where aid=#{aid}
     </delete>
+
+    <select id="findByAid" resultType="com.wangx.oj.entity.Announce">
+        select * from t_announce where aid = #{aid};
+    </select>
 </mapper>

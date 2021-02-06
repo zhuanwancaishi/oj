@@ -1,12 +1,14 @@
 package com.wangx.oj.service.impl;
 
-import com.wangx.oj.common.CodeMsg;
-import com.wangx.oj.common.Result;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wangx.oj.entity.User;
 import com.wangx.oj.mapper.UserMapper;
 import com.wangx.oj.service.UserService;
+import com.wangx.oj.utils.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
 
@@ -18,22 +20,47 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-        return userMapper.findAll();
+        List<User> UserList = userMapper.findAll();
+        return UserList;
     }
 
     @Override
-    public Result<Void> register(User user) {
-        userMapper.InsertOne(user);
-        return Result.success(null);
+    public void register(User User) {
+        User.setUid(UUIDGenerator.getUUID());
+        // md5 加密
+        String md5Password = DigestUtils.md5DigestAsHex(User.getPassword().getBytes());
+        User.setPassword(md5Password);
+        userMapper.InsertOne(User);
+        return;
+    }
+
+
+
+
+
+    @Override
+    public void update(User user) {
+        userMapper.updateById(user);
+        return;
     }
 
     @Override
-    public Result login(User user) {
-        User res = userMapper.findUserByUserName(user.getUsername());
-        if (res.getPassword().equals(user.getPassword())) {
-            res.setPassword(null);
-            return Result.success(res);
-        }
-        return Result.fail(CodeMsg.PASSWORD_ERROR);
+    public User findUserById(User User) {
+        User result = userMapper.findUserById(User);
+        result.setPassword("");
+        return result;
+    }
+
+    @Override
+    public User findUserByUserName(String username) {
+        User userByUserName = userMapper.findUserByUserName(username);
+        return userByUserName;
+    }
+
+    @Override
+    public IPage<User> findUserPagination(Integer page, Integer pageSize) {
+        Page<User> userPage = new Page<>(page, pageSize);//参数一是当前页，参数二是每页个数
+        IPage<User> userIPage = userMapper.selectPage(userPage, null);
+        return userIPage;
     }
 }

@@ -7,4 +7,5 @@ public interface AnnounceService {
     Result findAll();
     Result publishAnnounce(Announce announce);
     Result deleteAnnounce(Announce announce);
+    Result findByAid(Announce announce);
 }

@@ -1,5 +1,8 @@
 package com.wangx.oj.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +11,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@TableName("t_problem")
 public class Problem {
+    @TableId
     private String pid;
     private String tags;// ["tag1" , "tag2"]
     private String uid;
@@ -22,4 +27,11 @@ public class Problem {
     private Integer timeLimit;//单位ms
     private Integer memoryLimit;//单位b
     private String testCaseId;
+    private Integer level; // 0 -> easy 1-> mid 2 -> hard
+    private Integer pass;
+    private Integer totalSubmit;
+    @TableField(exist=false)
+    private String acRate;// 非表中字段，计算获得
+    private String inputDescription;
+    private String outputDescription;
 }

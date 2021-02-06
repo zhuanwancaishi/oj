@@ -17,7 +17,9 @@ public class CodeMsg {
     public static CodeMsg MOBILE_ERROR=new CodeMsg(50003,"手机号格式错误");
     public static CodeMsg NO_USER = new CodeMsg(50004,"用户不存在");
     public static CodeMsg PASSWORD_ERROR = new CodeMsg(50005,"密码错误");
-
+    public static CodeMsg NOT_FOUND = new CodeMsg(50006, "此数据不存在");
+    public static CodeMsg ACCOUNT_LOCKED = new CodeMsg(50007, "账户已锁定");
+    public static CodeMsg VERITY_CODE_ERROR = new CodeMsg(50008, "验证码错误，或已失效");
 
     //登陆模块异常....60000
     //商品模块...70000
