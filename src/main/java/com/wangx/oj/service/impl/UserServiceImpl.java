@@ -5,13 +5,14 @@ import com.wangx.oj.entity.User;
 import com.wangx.oj.mapper.UserMapper;
 import com.wangx.oj.service.UserService;
 import com.wangx.oj.utils.UUIDGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
-
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -45,10 +46,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(User User) {
-        User result = userMapper.findUserById(User);
-        result.setPassword("");
-        return result;
+    public User findUserById(String uid) {
+        log.info(uid);
+        User user = userMapper.selectById(uid);
+        return user;
     }
 
     @Override
@@ -62,5 +63,11 @@ public class UserServiceImpl implements UserService {
         Page<User> userPage = new Page<>(page, pageSize);//参数一是当前页，参数二是每页个数
         IPage<User> userIPage = userMapper.selectPage(userPage, null);
         return userIPage;
+    }
+
+    @Override
+    public Integer getUserCount() {
+        Integer count = userMapper.selectCount(null);
+        return count;
     }
 }

@@ -6,13 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("t_announce")
-public class Announce {
+
+public class Announce implements Serializable {
     @TableId
     private Integer aid;
     private String uid;

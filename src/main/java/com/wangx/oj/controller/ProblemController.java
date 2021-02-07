@@ -37,9 +37,7 @@ public class ProblemController {
     @RequestMapping("/findOneByPid")
     Result findOne(@RequestParam String pid) {
         Problem problem = problemService.findOneProblem(pid);
-        User User = new User();
-        User.setUid(problem.getUid());
-        User user = userService.findUserById(User);
+        User user = userService.findUserById(problem.getUid());
         Map res = new HashMap();
         res.put("problem", problem);
         res.put("user",user);

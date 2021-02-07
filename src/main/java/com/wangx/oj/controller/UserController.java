@@ -24,7 +24,7 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @Autowired
     RedisUtils redisUtils;
@@ -90,7 +90,7 @@ public class UserController {
 
     @RequestMapping("/findUserById")
     public Result findUserById(@RequestBody User User) {
-        return Result.success(userService.findUserById(User));
+        return Result.success(userService.findUserById(User.getUid()));
     }
 
     public Boolean verityCode(String code){

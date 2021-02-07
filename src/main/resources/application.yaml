@@ -18,6 +18,13 @@ spring:
     publisher-returns: true
     template:
       mandatory: true
+    listener:
+      simple:
+        acknowledge-mode: auto
+        concurrency: 1
+        max-concurrency: 1
+        retry:
+          enabled: true
   redis:
     database: 0
     host: 120.78.156.16
@@ -38,6 +45,7 @@ logging:
   pattern:
     file: "oj.%d{yyyy-MM-dd}.log"
 mybatis-plus:
+  field-strategy: 1
   global-config:
     db-config:
       id-type: auto

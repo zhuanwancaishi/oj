@@ -6,11 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @TableName("t_testcase")
-public class TestCase {
+public class TestCase implements Serializable {
     @TableId
     String id;
     String input;

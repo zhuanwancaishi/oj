@@ -6,13 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @TableName("t_problem")
-public class Problem {
+public class Problem implements Serializable {
     @TableId
     private String pid;
     private String tags;// ["tag1" , "tag2"]

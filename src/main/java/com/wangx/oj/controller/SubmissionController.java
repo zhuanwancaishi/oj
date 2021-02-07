@@ -1,44 +1,81 @@
 package com.wangx.oj.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.api.R;
+import com.sun.xml.internal.ws.developer.Serialization;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.Submission;
+import com.wangx.oj.entity.Submit;
+import com.wangx.oj.entity.TestCase;
 import com.wangx.oj.entity.User;
+import com.wangx.oj.mapper.UserMapper;
 import com.wangx.oj.service.SubmissionService;
+import com.wangx.oj.service.TestCaseService;
 import com.wangx.oj.service.UserService;
+import com.wangx.oj.utils.UUIDGenerator;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+@Slf4j
 @RestController
+@Serialization
 @RequestMapping("/submission")
 public class SubmissionController {
     @Autowired
     SubmissionService submissionService;
 
     @Autowired
+    AmqpTemplate amqpTemplate;
+
+    @Autowired
     UserService userService;
-    @GetMapping("")
-    public Result findAllPagination(@RequestParam Integer index, @RequestParam Integer pageSize) {
-        List<Submission> submissionList = submissionService.findSubmissionPagination(index, pageSize);
-        List<Map> resultList = new ArrayList<>();
-        for (Submission submission:submissionList) {
-            Map result = new HashMap();
-            String uid = submission.getUid();
-            User User = new User();
-            User.setUid(uid);
-            User user = userService.findUserById(User);
-            result.put("submission", submission);
-            result.put("user", user);
-            resultList.add(result);
+
+    @Autowired
+    TestCaseService testCaseService;
+
+    @RequestMapping(value = "/{index}/{pageSize}", method = RequestMethod.GET)
+    public Result findAllPagination(@PathVariable Integer index, @PathVariable Integer pageSize) {
+        IPage<Submission> submissionPagination = submissionService.findSubmissionPagination(index, pageSize);
+        List<Submission> submissionList = submissionPagination.getRecords();
+        Iterator<Submission> iterator = submissionList.iterator();
+        while (iterator.hasNext()){
+            Submission submission = iterator.next();
+            User user = userService.findUserById(submission.getUid());
+            submission.setUser(user);
         }
-        return Result.success(resultList);
+        submissionPagination.setRecords(submissionList);
+        return Result.success(submissionPagination);
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    public Result update(Submission submission) {
+        submissionService.update(submission);
+        return Result.success("成功");
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public Result sendMessage(@RequestBody Submission submission, @RequestParam String tid) {
+        TestCase testCase = testCaseService.findTestCaseById(tid);
+        submission.setSid(UUIDGenerator.getUUID());
+        submission.setCreateTime(new Date());
+        submission.setInput(testCase.getInput());
+        submission.setOutput(testCase.getOutput());
+        submission.setResult(-1); // pending
+        log.info(submission.toString());
+        submissionService.add(submission);
+        amqpTemplate.convertAndSend("judge", JSON.toJSONString(submission));
+        return Result.success("success");
+    }
+
+    @RequestMapping(value = "count", method = RequestMethod.GET)
+    public Result getCount(){
+        Integer count = userService.getUserCount();
+        return Result.success(count);
     }
 
 }

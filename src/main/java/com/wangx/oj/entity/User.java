@@ -7,13 +7,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @TableName("t_user")
-public class User {
+public class User implements Serializable {
     @TableId
     private String uid;
     private String username;
