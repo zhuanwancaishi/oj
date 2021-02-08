@@ -74,7 +74,7 @@ public class SubmissionController {
 
     @RequestMapping(value = "count", method = RequestMethod.GET)
     public Result getCount(){
-        Integer count = userService.getUserCount();
+        Integer count = submissionService.getSubmissionCount();
         return Result.success(count);
     }
 

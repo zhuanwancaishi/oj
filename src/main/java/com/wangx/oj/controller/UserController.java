@@ -118,6 +118,10 @@ public class UserController {
         return Result.success("更新成功");
     }
 
+    @RequestMapping(value = "count", method = RequestMethod.GET)
+    public Result getUserCount(){
+        return Result.success(userService.getUserCount());
+    }
 
 
 }
