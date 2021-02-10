@@ -19,9 +19,4 @@ import java.util.*;
 @SpringBootTest
 class OjApplicationTests {
 
-    @Test
-    public void test() {
-        System.out.println("hello world");
-    }
-
 }
