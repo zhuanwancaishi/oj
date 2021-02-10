@@ -1,5 +1,7 @@
 package com.wangx.oj.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.Announce;
 import com.wangx.oj.mapper.AnnounceMapper;
@@ -38,5 +40,10 @@ public class AnnounceServiceImpl implements AnnounceService {
         return Result.success(announceMapper.findByAid(announce));
     }
 
-
+    @Override
+    public IPage<Announce> findAnnouncePagination(Integer page, Integer pageSize) {
+        Page<Announce> announcePage = new Page<>();
+        IPage<Announce> announceIPage = announceMapper.selectPage(announcePage, null);
+        return announceIPage;
+    }
 }

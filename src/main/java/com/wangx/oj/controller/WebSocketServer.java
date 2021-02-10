@@ -13,7 +13,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-@ServerEndpoint("/websocket/{userId}") //WebSocket客户端建立连接的地址
+@ServerEndpoint("/ws/{userId}") //WebSocket客户端建立连接的地址
 @Component
 @Slf4j
 public class WebSocketServer {
