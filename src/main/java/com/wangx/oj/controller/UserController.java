@@ -41,6 +41,7 @@ public class UserController {
 
     @RequestMapping("/register")
     public Result register(@RequestBody User User) {
+        redisUtils.remove("userCount");
         userService.register(User);
         return Result.success(null);
     }
@@ -120,7 +121,14 @@ public class UserController {
 
     @RequestMapping(value = "count", method = RequestMethod.GET)
     public Result getUserCount(){
-        return Result.success(userService.getUserCount());
+        Integer userCount = 0;
+        if (redisUtils.hasKey("userCount")){
+             userCount = (Integer) redisUtils.get("userCount");
+        } else {
+            userCount = userService.getUserCount();
+            redisUtils.set("userCount", userCount);
+        }
+        return Result.success(userCount);
     }
 
 

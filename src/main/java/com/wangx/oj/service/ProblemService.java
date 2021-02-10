@@ -7,7 +7,6 @@ import com.wangx.oj.entity.Problem;
 import java.util.List;
 
 public interface ProblemService {
-    List<Problem> findAllProblems();
 
     void deleteOneProblem(Problem problem);
 
@@ -20,4 +19,10 @@ public interface ProblemService {
     void update(Problem problem);
 
     void add(Problem problem);
+
+    String getProblemDetail(String pid);
+
+    Integer getAcNum(String pid);
+
+    Integer getTotalNum(String pid);
 }

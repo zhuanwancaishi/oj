@@ -20,44 +20,4 @@ import java.util.*;
 class OjApplicationTests {
 
 
-
-	private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-
-	@Autowired
-	AmqpTemplate amqpTemplate;
-	@Test
-	public void testSender2() throws Exception {
-		Submit submit = new Submit();
-		submit.setCode("#include<stdio.h>\nint main(){\nint a=0,b=0;\nscanf(\"%d %d\",&a, &b);\nprintf(\"%d\",a+b);\nreturn 0;\n}");
-		submit.setInput("1 1");
-		submit.setOutput("2");
-		submit.setType(1);
-		String data = JSON.toJSONString(submit);
-		amqpTemplate.convertAndSend("judge", data);
-	}
-
-	@Test
-	public void testReceiver() throws Exception {
-		Object result = amqpTemplate.receiveAndConvert("result");
-
-	}
-
-	@Test
-	public void testJsonArray() {
-		List<String> tags = new ArrayList<>();
-		tags.add("dp");
-		tags.add("aa");
-		System.out.println(JSON.toJSON(tags));
-	}
-
-	@Autowired
-	private UserMapper userMapper;
-	@Test
-	public void queryUserForPage(){
-		Page<User> userPage = new Page<>(1, 2);//参数一是当前页，参数二是每页个数
-		IPage<User> iPage = userMapper.selectPage(userPage, null);
-		System.out.println(iPage);
-	}
-
 }

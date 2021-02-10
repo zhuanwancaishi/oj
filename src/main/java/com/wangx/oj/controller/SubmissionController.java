@@ -2,17 +2,14 @@ package com.wangx.oj.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.api.R;
-import com.sun.xml.internal.ws.developer.Serialization;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.Submission;
-import com.wangx.oj.entity.Submit;
 import com.wangx.oj.entity.TestCase;
 import com.wangx.oj.entity.User;
-import com.wangx.oj.mapper.UserMapper;
 import com.wangx.oj.service.SubmissionService;
 import com.wangx.oj.service.TestCaseService;
 import com.wangx.oj.service.UserService;
+import com.wangx.oj.utils.RedisUtils;
 import com.wangx.oj.utils.UUIDGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -23,7 +20,6 @@ import java.util.*;
 
 @Slf4j
 @RestController
-@Serialization
 @RequestMapping("/submission")
 public class SubmissionController {
     @Autowired
@@ -37,6 +33,9 @@ public class SubmissionController {
 
     @Autowired
     TestCaseService testCaseService;
+
+    @Autowired
+    RedisUtils redisUtils;
 
     @RequestMapping(value = "/{index}/{pageSize}", method = RequestMethod.GET)
     public Result findAllPagination(@PathVariable Integer index, @PathVariable Integer pageSize) {
@@ -60,6 +59,8 @@ public class SubmissionController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Result sendMessage(@RequestBody Submission submission, @RequestParam String tid) {
+        // 设置为null更新题目详情的表格
+        redisUtils.hmSet("problemChart", submission.getPid(), null);
         TestCase testCase = testCaseService.findTestCaseById(tid);
         submission.setSid(UUIDGenerator.getUUID());
         submission.setCreateTime(new Date());

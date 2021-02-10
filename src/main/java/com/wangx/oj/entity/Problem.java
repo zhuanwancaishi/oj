@@ -1,5 +1,6 @@
 package com.wangx.oj.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -15,9 +16,9 @@ import java.util.Date;
 @Data
 @TableName("t_problem")
 public class Problem implements Serializable {
-    @TableId
+    @TableId(value = "pid", type = IdType.INPUT)
     private String pid;
-    private String tags;// ["tag1" , "tag2"]
+    private String tags;// ["tag1" , "tWag2"]
     private String uid;
     private String title;
     private String description;

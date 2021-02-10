@@ -6,13 +6,15 @@ import com.wangx.oj.entity.Problem;
 import com.wangx.oj.entity.User;
 import com.wangx.oj.service.ProblemService;
 import com.wangx.oj.service.UserService;
+import com.wangx.oj.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 @RestController
 @RequestMapping("/problem")
 public class ProblemController {
@@ -20,12 +22,12 @@ public class ProblemController {
     ProblemService problemService;
 
     @Autowired
+    RedisUtils redisUtils;
+
+    @Autowired
     UserService userService;
-    @RequestMapping("/findAll")
-    Result findAll() {
-        List<Problem> problemList = problemService.findAllProblems();
-        return Result.success(problemList);
-    }
+
+
 
 
     @RequestMapping("/deleteOne")
@@ -60,6 +62,19 @@ public class ProblemController {
     Result add(@RequestBody Problem problem) {
         problemService.add(problem);
         return Result.success("添加成功");
+    }
+
+    @RequestMapping(value = "chart", method = RequestMethod.GET)
+    Result getChartData(@RequestParam String pid) {
+        // 1. 从redis中找表格数据
+        String problemDetail = (String) redisUtils.hmGet("problemChart", pid);
+        // 2. redis中没有从数据库查，然后存到redis
+        if (problemDetail == null || "".equals(problemDetail)) {
+            log.info("从数据库中获取题目表格数据");
+            problemDetail = problemService.getProblemDetail(pid);
+            redisUtils.hmSet("problemChart", pid, problemDetail);
+        }
+        return Result.success(problemDetail);
     }
 
 }

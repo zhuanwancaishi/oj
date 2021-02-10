@@ -1,5 +1,7 @@
 package com.wangx.oj.entity;
 
+import com.alibaba.druid.proxy.jdbc.JdbcParameter;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -13,7 +15,7 @@ import java.io.Serializable;
 @Data
 @TableName("t_testcase")
 public class TestCase implements Serializable {
-    @TableId
+    @TableId(value = "id", type = IdType.INPUT)
     String id;
     String input;
     String output;
