@@ -20,7 +20,7 @@ import java.util.*;
 class OjApplicationTests {
 
     @Test
-    public test() {
+    public void test() {
         System.out.println("hello world");
     }
 
