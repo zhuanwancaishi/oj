@@ -40,9 +40,12 @@ public class UserController {
 
 
     @RequestMapping("/register")
-    public Result register(@RequestBody User User) {
-        redisUtils.remove("userCount");
-        userService.register(User);
+    public Result register(@RequestBody User user) {
+        if (redisUtils.hasKey("userCount")){
+            redisUtils.remove("userCount");
+        }
+        log.info(user.toString());
+        userService.register(user);
         return Result.success(null);
     }
 
@@ -129,6 +132,20 @@ public class UserController {
             redisUtils.set("userCount", userCount);
         }
         return Result.success(userCount);
+    }
+
+    @RequestMapping(value = "/{uid}", method = RequestMethod.DELETE)
+    public Result delete(@PathVariable String uid){
+        userService.deleteUser(uid);
+        return Result.success("success");
+    }
+
+    @RequestMapping(value = "/deletes", method = RequestMethod.POST)
+    public Result deleteList(@RequestBody List<User> users){
+        for (User user: users){
+            userService.deleteUser(user.getUid());
+        }
+        return Result.success("success");
     }
 
 

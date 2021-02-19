@@ -1,6 +1,7 @@
 package com.wangx.oj.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,4 +27,6 @@ public class User implements Serializable {
     private Integer authority;//0 正常用户 1 管理员 -1 封禁用户
     private String avatar; // 头像地址
     private String realName; // 真实姓名
+    @TableLogic
+    private Integer deleted;
 }

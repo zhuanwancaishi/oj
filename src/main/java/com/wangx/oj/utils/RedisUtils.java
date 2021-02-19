@@ -5,12 +5,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ListOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 @Service
 public class RedisUtils {
@@ -232,4 +229,22 @@ public class RedisUtils {
         ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
         return zset.rangeByScore(key, scoure, scoure1);
     }
+
+    public Boolean setBit(String key, long offset, boolean tag) {
+        return (Boolean) redisTemplate.execute(new RedisCallback<Boolean>() {
+            @Override
+            public Boolean doInRedis(RedisConnection connection) throws DataAccessException {
+                return connection.setBit(key.getBytes(), offset, tag);
+            }
+        });
+    }
+
+    public boolean getBit(String buildSignKey, int offset){
+        return redisTemplate.opsForValue().getBit(buildSignKey, offset);
+    }
+
+    public Long bitCount(String key) {
+        return (Long) redisTemplate.execute((RedisCallback<Long>) con -> con.bitCount(key.getBytes()));
+    }
+
 }

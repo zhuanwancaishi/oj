@@ -13,4 +13,5 @@ public interface UserService {
     User findUserByUserName(String username);
     IPage<User> findUserPagination(Integer page, Integer pageSize);
     Integer getUserCount();
+    void deleteUser(String uid);
 }

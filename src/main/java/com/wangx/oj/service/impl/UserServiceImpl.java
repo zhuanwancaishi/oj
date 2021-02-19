@@ -26,12 +26,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void register(User User) {
-        User.setUid(UUIDGenerator.getUUID());
+    public void register(User user) {
+
+        // 设置用户id
+        user.setUid(UUIDGenerator.getUUID());
         // md5 加密
-        String md5Password = DigestUtils.md5DigestAsHex(User.getPassword().getBytes());
-        User.setPassword(md5Password);
-        userMapper.InsertOne(User);
+        String md5Password = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
+        // 初始为普通用户
+        user.setAuthority(0);
+        // 设置初始分数为1500分
+        user.setLevel(1500);
+        user.setPassword(md5Password);
+        log.info(user.toString());
+        userMapper.InsertOne(user);
         return;
     }
 
@@ -47,7 +54,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(String uid) {
-        log.info(uid);
         User user = userMapper.selectById(uid);
         return user;
     }
@@ -69,5 +75,10 @@ public class UserServiceImpl implements UserService {
     public Integer getUserCount() {
         Integer count = userMapper.selectCount(null);
         return count;
+    }
+
+    @Override
+    public void deleteUser(String uid) {
+        userMapper.deleteById(uid);
     }
 }

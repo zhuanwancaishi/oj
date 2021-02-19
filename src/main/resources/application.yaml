@@ -29,7 +29,7 @@ spring:
     database: 0
     host: 120.78.156.16
     port: 6379
-    password:
+    password: 818923
     jedis:
       pool:
         max-active: 200
@@ -53,10 +53,11 @@ mybatis-plus:
       #驼峰下划线转换
       column-underline: true
       #逻辑删除配置
-      logic-delete-value: 0
-      logic-not-delete-value: 1
+      logic-delete-value: 0 # 0为删除
+      logic-not-delete-value: 1 # 1为未删除
       db-type: mysql
     refresh: false
+
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false

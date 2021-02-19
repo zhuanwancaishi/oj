@@ -60,10 +60,10 @@ public class ProblemServiceImpl implements ProblemService {
             Integer acNum = getAcNum(problem.getPid());
             problem.setPass(acNum);
             if (problem.getTotalSubmit() == 0) {
-                problem.setAcRate("0%");
+                problem.setAcRate("0");
             } else {
-                Double rate = ((double)problem.getPass() / problem.getTotalSubmit())*100;
-                problem.setAcRate(df.format(rate)+"%");
+                Double rate = ((double)problem.getPass() / problem.getTotalSubmit());
+                problem.setAcRate(df.format(rate));
             }
             res.add(problem);
         }
