@@ -6,6 +6,7 @@ import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.Announce;
 import com.wangx.oj.mapper.AnnounceMapper;
 import com.wangx.oj.service.AnnounceService;
+import com.wangx.oj.utils.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +23,15 @@ public class AnnounceServiceImpl implements AnnounceService {
     }
 
     @Override
-    public Result publishAnnounce(Announce announce) {
+    public void publishAnnounce(Announce announce) {
         announce.setCreateTime(new Date());
         announce.setUpdateTime(new Date());
-        announceMapper.insertOne(announce);
-        return Result.success(null);
+        announceMapper.insert(announce);
     }
 
     @Override
-    public Result deleteAnnounce(Announce announce) {
-        announceMapper.deleteOne(announce);
-        return Result.success(null);
+    public void deleteAnnounce(Integer aid) {
+        announceMapper.deleteById(aid);
     }
 
     @Override
@@ -42,8 +41,14 @@ public class AnnounceServiceImpl implements AnnounceService {
 
     @Override
     public IPage<Announce> findAnnouncePagination(Integer page, Integer pageSize) {
-        Page<Announce> announcePage = new Page<>();
+        Page<Announce> announcePage = new Page<>(page, pageSize);
         IPage<Announce> announceIPage = announceMapper.selectPage(announcePage, null);
         return announceIPage;
+    }
+
+    @Override
+    public void updateAnnounce(Announce announce) {
+        announce.setUpdateTime(new Date());
+        announceMapper.updateById(announce);
     }
 }

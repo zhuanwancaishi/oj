@@ -13,13 +13,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("t_announce")
-
 public class Announce implements Serializable {
     @TableId
     private Integer aid;
     private String uid;
     private String title;
-    private String content;
+    private String contentHtml;
+    private String contentMd;
     private Date createTime;
     private Date updateTime;
 }

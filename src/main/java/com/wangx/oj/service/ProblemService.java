@@ -14,7 +14,7 @@ public interface ProblemService {
 
     void addOneProblem(Problem problem);
 
-    IPage<Problem> findProblemPagination(Integer page, Integer pageSize);
+    IPage<Problem> findProblemPagination(Integer page, Integer pageSize, Integer isAdmin);
 
     void update(Problem problem);
 

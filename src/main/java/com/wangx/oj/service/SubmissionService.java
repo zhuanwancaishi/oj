@@ -11,4 +11,5 @@ public interface SubmissionService {
     void add(Submission submission);
     Submission findSubmissionById(String sid);
     Integer getSubmissionCount();
+    void addForContest(Submission submission, String cid);
 }

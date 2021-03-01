@@ -9,8 +9,10 @@ import com.wangx.oj.service.UserService;
 import com.wangx.oj.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +29,12 @@ public class ProblemController {
     @Autowired
     UserService userService;
 
-
-
-
     @RequestMapping("/deleteOne")
     Result delete(@RequestBody Problem problem) {
         problemService.deleteOneProblem(problem);
         return Result.success(null);
     }
+
 
     @RequestMapping("/findOneByPid")
     Result findOne(@RequestParam String pid) {
@@ -46,14 +46,22 @@ public class ProblemController {
         return Result.success(res);
     }
 
-    @RequestMapping(value = "{page}/{pageSize}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{page}/{pageSize}", method = RequestMethod.GET)
     Result findProblemPagination(@PathVariable Integer page, @PathVariable Integer pageSize) {
-        IPage<Problem> problemPagination = problemService.findProblemPagination(page, pageSize);
+        IPage<Problem> problemPagination = problemService.findProblemPagination(page, pageSize, 0);
         return Result.success(problemPagination);
     }
 
+    @RequestMapping(value = "/admin/{page}/{pageSize}", method = RequestMethod.GET)
+    Result findProblemPaginationAdmin(@PathVariable Integer page, @PathVariable Integer pageSize) {
+        IPage<Problem> problemPagination = problemService.findProblemPagination(page, pageSize, 1);
+        return Result.success(problemPagination);
+    }
+
+
     @RequestMapping(value = "", method = RequestMethod.PUT)
     Result updateProblem(@RequestBody Problem problem) {
+        problem.setUpdateTime(new Date());
         problemService.update(problem);
         return Result.success("修改成功");
     }
@@ -63,6 +71,7 @@ public class ProblemController {
         problemService.add(problem);
         return Result.success("添加成功");
     }
+
 
     @RequestMapping(value = "chart", method = RequestMethod.GET)
     Result getChartData(@RequestParam String pid) {

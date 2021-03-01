@@ -3,7 +3,9 @@ package com.wangx.oj.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wangx.oj.entity.Contest2Submission;
 import com.wangx.oj.entity.Submission;
+import com.wangx.oj.mapper.Contest2SubmissionMapper;
 import com.wangx.oj.mapper.SubmissionMapper;
 import com.wangx.oj.service.SubmissionService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +18,10 @@ import java.util.List;
 public class SubmissionServiceImpl implements SubmissionService {
     @Autowired
     SubmissionMapper submissionMapper;
+    @Autowired
+    Contest2SubmissionMapper c2sMapper;
     @Override
     public IPage findSubmissionPagination(Integer index, Integer pageSize) {
-        Integer start = (index - 1) * pageSize;
-        Integer end = index * pageSize;
         Page<Submission> page = new Page<>(index, pageSize);
         QueryWrapper<Submission> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("create_time");
@@ -50,4 +52,14 @@ public class SubmissionServiceImpl implements SubmissionService {
         Integer count = submissionMapper.selectCount(null);
         return count;
     }
+
+    @Override
+    public void addForContest(Submission submission, String cid) {
+        submission.setResult(-1);
+        c2sMapper.insert(new Contest2Submission(submission.getSid(), cid, submission.getUid()));
+        submissionMapper.insert(submission);
+        return;
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.wangx.oj.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,8 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 
 @Data
@@ -29,4 +33,6 @@ public class User implements Serializable {
     private String realName; // 真实姓名
     @TableLogic
     private Integer deleted;
+    @TableField(exist = false)
+    private String code;
 }

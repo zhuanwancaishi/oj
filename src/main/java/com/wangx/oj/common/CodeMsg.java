@@ -20,10 +20,12 @@ public class CodeMsg {
     public static CodeMsg NOT_FOUND = new CodeMsg(50006, "此数据不存在");
     public static CodeMsg ACCOUNT_LOCKED = new CodeMsg(50007, "账户已锁定");
     public static CodeMsg VERITY_CODE_ERROR = new CodeMsg(50008, "验证码错误，或已失效");
+    public static CodeMsg ACCOUNT_PASSWORD_EMPTY=new CodeMsg(50009,"账号或密码不能为空");
+    public static CodeMsg EXCESSIVE_ATTEMPTS = new CodeMsg(50010, "操作频繁，请稍后再试");
+    public static CodeMsg NOT_LOGIN = new CodeMsg(50011, "未登录");
+    public static CodeMsg PERMIT_DENY = new CodeMsg(50012, "权限不足");
+    public static CodeMsg SESSION_TIMEOUT = new CodeMsg(50013, "会话超时");
 
-    //登陆模块异常....60000
-    //商品模块...70000
-    //订单...80000
 
 
     public CodeMsg fillArgs(Object...args){

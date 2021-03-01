@@ -6,7 +6,10 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.wangx.oj.common.CodeMsg;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.utils.RedisUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -18,7 +21,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @RestController
 @RequestMapping("/code")
 public class CodeController {
@@ -32,9 +37,11 @@ public class CodeController {
         byte[] captchaChallengeAsJpeg = null;
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
         try {
+            String ip = httpServletRequest.getRemoteAddr();
             // 生产验证码字符串并保存到session中
             String createText = defaultKaptcha.createText();
-            redisUtils.set("verificationCode", createText);
+            log.info("验证码为: \t" + createText);
+            redisUtils.set(ip+"_captcha_code", createText,1L, TimeUnit.MINUTES);
             // 使用生成的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);
             ImageIO.write(challenge, "jpg", jpegOutputStream);
@@ -55,13 +62,5 @@ public class CodeController {
         responseOutputStream.close();
     }
 
-    @PostMapping("/")
-    public Result<?> checkVerificationCode(@RequestParam("code") String code, HttpServletRequest httpServletRequest) {
-        String verificationCodeIn = (String) redisUtils.get("verificationCode");
-        redisUtils.remove("verificationCode");
-        if (StringUtils.isEmpty(verificationCodeIn) || !verificationCodeIn.equals(code)) {
-            return Result.fail(CodeMsg.VERITY_CODE_ERROR);
-        }
-        return Result.success(null);
-    }
+
 }

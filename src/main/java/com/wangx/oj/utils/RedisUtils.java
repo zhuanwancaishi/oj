@@ -14,6 +14,8 @@ public class RedisUtils {
     @Autowired
     private RedisTemplate redisTemplate;
 
+
+
     /**
      * 写入缓存
      *
@@ -147,6 +149,12 @@ public class RedisUtils {
         hash.put(key, hashKey, value);
     }
 
+    public void hmSet(String key, Object hashKey, Object value, Integer exp) {
+        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        hash.put(key, hashKey, value);
+        redisTemplate.expire(key, exp, TimeUnit.SECONDS);
+    }
+
     /**
      * 哈希获取数据
      *
@@ -246,5 +254,4 @@ public class RedisUtils {
     public Long bitCount(String key) {
         return (Long) redisTemplate.execute((RedisCallback<Long>) con -> con.bitCount(key.getBytes()));
     }
-
 }

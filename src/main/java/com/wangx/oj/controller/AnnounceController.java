@@ -18,14 +18,22 @@ public class AnnounceController {
         return announceService.findAll();
     }
 
-    @RequestMapping("/add")
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     Result add(@RequestBody Announce announce) {
-        return announceService.publishAnnounce(announce);
+        announceService.publishAnnounce(announce);
+        return Result.success("success");
     }
 
-    @RequestMapping("/delete")
-    Result delete(@RequestBody Announce announce) {
-        return announceService.deleteAnnounce(announce);
+    @RequestMapping(value = "/{aid}", method = RequestMethod.DELETE)
+    Result delete(@PathVariable Integer aid) {
+        announceService.deleteAnnounce(aid);
+        return Result.success("success");
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    Result update(@RequestBody Announce announce){
+        announceService.updateAnnounce(announce);
+        return Result.success("success");
     }
 
     @RequestMapping("/findByAid")

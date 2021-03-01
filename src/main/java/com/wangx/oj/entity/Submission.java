@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -45,7 +46,6 @@ public class Submission implements Serializable {
      *     {"Compile Error", 9}
      */
     private Integer result;
-    @TableField(exist = false)
     private String error; // 错误信息
     @TableField(exist = false)
     private User user;

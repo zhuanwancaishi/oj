@@ -21,9 +21,11 @@ public class Problem implements Serializable {
     private String tags;// ["tag1" , "tWag2"]
     private String uid;
     private String title;
-    private String description;
+    private String descriptionHtml;
+    private String descriptionMd;
     private String samples;// {"input1":"1 1", "output1" : "2"}
-    private String hint;
+    private String hintHtml;
+    private String hintMd;
     private String languages; //["1","2"] 0 -> C 、1 -> c++、2 -> Java
     private Date createTime;
     private Date updateTime;
@@ -35,6 +37,11 @@ public class Problem implements Serializable {
     private Integer totalSubmit;
     @TableField(exist=false)
     private String acRate;// 非表中字段，计算获得
-    private String inputDescription;
-    private String outputDescription;
+    //html
+    private String inputDescriptionHtml;
+    // markdown
+    private String inputDescriptionMd;
+    private String outputDescriptionHtml;
+    private String outputDescriptionMd;
+    private Boolean visible;
 }

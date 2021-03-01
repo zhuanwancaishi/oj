@@ -10,11 +10,14 @@ import com.wangx.oj.service.SubmissionService;
 import com.wangx.oj.service.TestCaseService;
 import com.wangx.oj.service.UserService;
 import com.wangx.oj.utils.IPUtils;
+import com.wangx.oj.utils.JudgeUtils;
 import com.wangx.oj.utils.RedisUtils;
 import com.wangx.oj.utils.UUIDGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +44,9 @@ public class SubmissionController {
     @Autowired
     RedisUtils redisUtils;
 
+    @Autowired
+    JudgeUtils judgeUtils;
+
     @RequestMapping(value = "/{index}/{pageSize}", method = RequestMethod.GET)
     public Result findAllPagination(@PathVariable Integer index, @PathVariable Integer pageSize) {
         IPage<Submission> submissionPagination = submissionService.findSubmissionPagination(index, pageSize);
@@ -51,7 +57,7 @@ public class SubmissionController {
             User user = userService.findUserById(submission.getUid());
             // 未判题，重新判题
             if (submission.getResult().equals(-1)){
-                reJudge(submission);
+                judgeUtils.reJudge(submission);
             }
             submission.setUser(user);
         }
@@ -71,24 +77,10 @@ public class SubmissionController {
      * @param tid 测试样例 id
      * @return
      */
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Result sendMessage(@RequestBody Submission submission, @RequestParam String tid) {
-        Date dateNow = new Date();
-        SimpleDateFormat smf = new SimpleDateFormat("yyyy-MM-dd");
-        String sign = smf.format(dateNow).replace("-", "");
-        log.info("sign: " + sign);
-        redisUtils.setBit(sign, 0, true);
-        // 设置为null更新题目详情的表格
-        redisUtils.hmSet("problemChart", submission.getPid(), null);
-        TestCase testCase = testCaseService.findTestCaseById(tid);
-        submission.setSid(UUIDGenerator.getUUID());
-        submission.setCreateTime(new Date());
-        submission.setInput(testCase.getInput());
-        submission.setOutput(testCase.getOutput());
-        submission.setResult(-1); // pending
-        log.info(submission.toString());
-        submissionService.add(submission);
-        amqpTemplate.convertAndSend("judge", JSON.toJSONString(submission));
+        judgeUtils.submitJudge(submission, tid);
         return Result.success("success");
     }
 
@@ -98,24 +90,17 @@ public class SubmissionController {
      */
     @RequestMapping(value = "count", method = RequestMethod.GET)
     public Result getCount(){
-        Integer count = submissionService.getSubmissionCount();
+        Integer count = 0;
+        if (redisUtils.hasKey("submissionCount")){
+            count = (Integer) redisUtils.get("submissionCount");
+        } else {
+            count = submissionService.getSubmissionCount();
+            redisUtils.set("submissionCount", count);
+        }
         return Result.success(count);
     }
 
-    /**
-     * 重新判题
-     * @param submission
-     */
-    private void reJudge(Submission submission) {
-        // 设置为null更新题目详情的表格
-        redisUtils.hmSet("problemChart", submission.getPid(), null);
-        TestCase testCase = testCaseService.findTestCaseById(submission.getPid());
-        // 测试样例和提交信息不存在一个表中，不进行存储
-        submission.setInput(testCase.getInput());
-        submission.setOutput(testCase.getOutput());
-        // 发送信息
-        amqpTemplate.convertAndSend("judge", JSON.toJSONString(submission));
-    }
+
 
     @RequestMapping("/today")
     public Result getTodaySubmission(HttpServletRequest request){

@@ -1,9 +1,11 @@
 package com.wangx.oj.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.User;
 import com.wangx.oj.mapper.UserMapper;
 import com.wangx.oj.service.UserService;
+import com.wangx.oj.utils.RedisUtils;
 import com.wangx.oj.utils.UUIDGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +13,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
-
+    @Autowired
+    private RedisUtils redisUtils;
 
     @Override
     public List<User> findAll() {
@@ -31,12 +37,12 @@ public class UserServiceImpl implements UserService {
         // 设置用户id
         user.setUid(UUIDGenerator.getUUID());
         // md5 加密
-        String md5Password = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
+        String password = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
         // 初始为普通用户
         user.setAuthority(0);
         // 设置初始分数为1500分
         user.setLevel(1500);
-        user.setPassword(md5Password);
+        user.setPassword(password);
         log.info(user.toString());
         userMapper.InsertOne(user);
         return;
@@ -81,4 +87,6 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String uid) {
         userMapper.deleteById(uid);
     }
+
+
 }

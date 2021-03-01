@@ -47,13 +47,17 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
-    public IPage<Problem> findProblemPagination(Integer page, Integer pageSize) {
+    public IPage<Problem> findProblemPagination(Integer page, Integer pageSize, Integer isAdmin) {
         List<Problem> res = new ArrayList<>();
-
+        QueryWrapper<Problem> problemQueryWrapper = new QueryWrapper<>();
+        problemQueryWrapper.eq("visible", true);
         Page<Problem> problemPage = new Page<>(page, pageSize);
-        IPage<Problem> iPage = problemMapper.selectPage(problemPage, null);
+        // 若是管理员查询就不设置条件
+        if (isAdmin == 1) problemQueryWrapper = null;
+        IPage<Problem> iPage = problemMapper.selectPage(problemPage, problemQueryWrapper);
         List<Problem> problemList = iPage.getRecords();
         DecimalFormat df = new DecimalFormat("0.00");
+        // 计算每个题目的正确率
         for(Problem problem: problemList) {
             Integer totalNum = getTotalNum(problem.getPid());
             problem.setTotalSubmit(totalNum);
@@ -63,7 +67,7 @@ public class ProblemServiceImpl implements ProblemService {
                 problem.setAcRate("0");
             } else {
                 Double rate = ((double)problem.getPass() / problem.getTotalSubmit());
-                problem.setAcRate(df.format(rate));
+                problem.setAcRate(df.format(rate * 100));
             }
             res.add(problem);
         }
