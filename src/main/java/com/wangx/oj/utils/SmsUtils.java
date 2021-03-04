@@ -1,5 +1,6 @@
 package com.wangx.oj.utils;
 
+import com.alibaba.druid.util.StringUtils;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -7,6 +8,7 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,7 @@ import java.util.Date;
 import java.util.Random;
 
 @Component
+@Slf4j
 public class SmsUtils {
 
     @Autowired
@@ -57,6 +60,12 @@ public class SmsUtils {
         } catch (ClientException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean checkSmsCode(String code, String phone) {
+        String rightCode = (String) redisUtils.hmGet("sms", phone);
+        log.info(code, rightCode);
+        return StringUtils.equals(code ,rightCode);
     }
 
     public  String randomNumber(){

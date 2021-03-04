@@ -1,11 +1,13 @@
 package com.wangx.oj.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.wangx.oj.common.CodeMsg;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.User;
 import com.wangx.oj.service.UserService;
 
 import com.wangx.oj.utils.RedisUtils;
+import com.wangx.oj.utils.SmsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,9 @@ public class UserController {
     @Value("refreshToken-expireTime")
     String refreshTokenExpireTime;
 
+    @Autowired
+    private SmsUtils smsUtils;
+
     @RequestMapping("/findAll")
     public Result findAll(){
         return Result.success(userService.findAll());
@@ -36,6 +41,7 @@ public class UserController {
 
     @RequestMapping("/register")
     public Result register(@RequestBody User user) {
+        if (!smsUtils.checkSmsCode(user.getCode(), user.getTel())) return Result.fail(CodeMsg.VERITY_CODE_ERROR);
         if (redisUtils.hasKey("userCount")){
             redisUtils.remove("userCount");
         }

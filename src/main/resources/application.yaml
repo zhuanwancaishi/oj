@@ -2,9 +2,9 @@ server:
   port: 8081
 spring:
   datasource:
-    url: jdbc:mysql://120.78.156.16:3306/onlinejudge?useUnicode=true&characterEncoding=utf-8
-    username: root
-    password: 818923
+    url: jdbc:mysql://rm-bp1b586f7s87er6ibso.mysql.rds.aliyuncs.com/onlinejudge
+    username: wangx
+    password: qazwsx19981115!
     driverClassName: com.mysql.cj.jdbc.Driver
   application:
     name: spirng-boot-rabbitmq-sender
@@ -63,3 +63,10 @@ mybatis-plus:
     cache-enabled: false
   mapper-locations: /mapper/*.xml
   type-aliases-package: com.wangx.oj.entity
+sms:
+  accesskey-id: LTAI4G41c5QxKrwi4TQRWxeF
+  accesskey-secret:  103xnfjqYCzoG9nqM08iaVIOAKRd3n
+  sign-name: 启航实验室
+  template-code: SMS_186401098
+
+
