@@ -54,6 +54,7 @@ public class SmsUtils {
         request.putQueryParameter("TemplateParam", "{\"code\":\""+code+"\"}");
         try {
             CommonResponse response = client.getCommonResponse(request);
+            // 5 * 60 = 5分钟
             redisUtils.hmSet("sms", phone, code, 5*60);
 
             System.out.println(response.getData());

@@ -25,6 +25,7 @@ public class CodeMsg {
     public static CodeMsg NOT_LOGIN = new CodeMsg(50011, "未登录");
     public static CodeMsg PERMIT_DENY = new CodeMsg(50012, "权限不足");
     public static CodeMsg SESSION_TIMEOUT = new CodeMsg(50013, "会话超时");
+    public static CodeMsg VERITY_CODE_IN_TIME = new CodeMsg(50014, "验证码已发送，请五分钟后再试");
 
 
 

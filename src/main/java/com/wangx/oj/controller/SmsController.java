@@ -1,8 +1,8 @@
 package com.wangx.oj.controller;
 
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import com.wangx.oj.common.CodeMsg;
 import com.wangx.oj.common.Result;
+import com.wangx.oj.utils.RedisUtils;
 import com.wangx.oj.utils.SmsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +14,15 @@ import java.util.regex.Pattern;
 public class SmsController {
     @Autowired
     private SmsUtils smsUtils;
-
+    @Autowired
+    private RedisUtils redisUtils;
     @RequestMapping(value = "/{phone}", method = RequestMethod.GET)
     public Result sendSms(@PathVariable String phone) {
         if (phone == null || "".equals(phone)) return Result.fail(CodeMsg.MOBILE_EMPTY);
         if (!validateMobilePhone(phone)) return Result.fail(CodeMsg.MOBILE_ERROR);
+        Object sms = redisUtils.hmGet("sms", phone);
+        // 验证码已发送，防止重复发生
+        if (sms!=null) return Result.fail(CodeMsg.VERITY_CODE_IN_TIME);
         smsUtils.send(phone);
         return Result.success("发送成功");
     }
