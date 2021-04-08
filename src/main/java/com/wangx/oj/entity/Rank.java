@@ -16,9 +16,11 @@ public class Rank {
     private Integer id;
     private String uid;
     private Long total;
-    private Long pass;
+    private Integer pass;
     @TableField(exist = false)
-    private String acRate;
+    private Integer level;
     @TableField(exist = false)
     private String username;
+    @TableField(exist = false)
+    private String acRate;
 }

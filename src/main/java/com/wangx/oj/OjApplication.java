@@ -6,15 +6,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @SpringBootApplication
-@MapperScan("com.wangx.oj.mapper")//使用MapperScan批量扫描所有的Mapper接口；
+//使用MapperScan批量扫描所有的Mapper接口；
+@MapperScan("com.wangx.oj.mapper")
 public class OjApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(OjApplication.class, args);
 	}
-	
+
 }

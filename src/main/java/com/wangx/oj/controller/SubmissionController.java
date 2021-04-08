@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.Submission;
+import com.wangx.oj.entity.SubmissionStatics;
 import com.wangx.oj.entity.TestCase;
 import com.wangx.oj.entity.User;
 import com.wangx.oj.service.SubmissionService;
@@ -46,7 +47,7 @@ public class SubmissionController {
 
     @Autowired
     JudgeUtils judgeUtils;
-
+    private static final String STATICS_SUBMISSION = "statics_submission";
     @RequestMapping(value = "/{index}/{pageSize}", method = RequestMethod.GET)
     public Result findAllPagination(@PathVariable Integer index, @PathVariable Integer pageSize) {
         IPage<Submission> submissionPagination = submissionService.findSubmissionPagination(index, pageSize);
@@ -79,8 +80,8 @@ public class SubmissionController {
      */
     @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public Result sendMessage(@RequestBody Submission submission, @RequestParam String tid) {
-        judgeUtils.submitJudge(submission, tid);
+    public Result sendMessage(@RequestBody Submission submission, @RequestParam String tid, HttpServletRequest request) {
+        judgeUtils.submitJudge(submission, tid, request);
         return Result.success("success");
     }
 
@@ -102,14 +103,10 @@ public class SubmissionController {
 
 
 
-    @RequestMapping("/today")
-    public Result getTodaySubmission(HttpServletRequest request){
-        Date dateNow = new Date();
-        SimpleDateFormat smf = new SimpleDateFormat("yyyy-MM-dd");
-        String sign = smf.format(dateNow).replace("-", "");
-        log.info(sign);
-        Long count = redisUtils.bitCount(sign);
-        return Result.success(count);
+    @RequestMapping("/statics")
+    public Result getTodaySubmission(){
+        List<SubmissionStatics> submissionStatics = submissionService.findSubmissionStatics();
+        return Result.success(submissionStatics);
     }
 
 }

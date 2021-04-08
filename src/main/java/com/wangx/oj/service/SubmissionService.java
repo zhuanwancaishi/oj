@@ -2,6 +2,7 @@ package com.wangx.oj.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wangx.oj.entity.Submission;
+import com.wangx.oj.entity.SubmissionStatics;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface SubmissionService {
     Submission findSubmissionById(String sid);
     Integer getSubmissionCount();
     void addForContest(Submission submission, String cid);
+    List<SubmissionStatics> findSubmissionStatics();
 }

@@ -20,7 +20,8 @@ public class Submission implements Serializable {
     @TableId(value = "sid", type = IdType.INPUT)
     private String sid;
     private String pid;
-    private Date createTime;// 提交时间
+    // 提交时间
+    private Date createTime;
     private String uid;
     private String language;
     @TableField(exist = false)
@@ -31,7 +32,8 @@ public class Submission implements Serializable {
     private String output;
     private Integer timeCost;
     private Integer memoryCost;
-    private String code;// 代码
+    // 代码
+    private String code;
     /**
      * 结果
      *     {"pending": -1},
@@ -46,7 +48,9 @@ public class Submission implements Serializable {
      *     {"Compile Error", 9}
      */
     private Integer result;
-    private String error; // 错误信息
+    // 错误信息
+    private String error;
+    private String ip;
     @TableField(exist = false)
     private User user;
 }

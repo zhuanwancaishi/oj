@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wangx.oj.entity.Contest2Submission;
 import com.wangx.oj.entity.Submission;
+import com.wangx.oj.entity.SubmissionStatics;
 import com.wangx.oj.mapper.Contest2SubmissionMapper;
 import com.wangx.oj.mapper.SubmissionMapper;
+import com.wangx.oj.mapper.SubmissionStaticsMapper;
 import com.wangx.oj.service.SubmissionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,15 @@ import java.util.List;
 @Slf4j
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
+
     @Autowired
     SubmissionMapper submissionMapper;
+
     @Autowired
     Contest2SubmissionMapper c2sMapper;
+
+    @Autowired
+    private SubmissionStaticsMapper submissionStaticsMapper;
     @Override
     public IPage findSubmissionPagination(Integer index, Integer pageSize) {
         Page<Submission> page = new Page<>(index, pageSize);
@@ -61,5 +68,8 @@ public class SubmissionServiceImpl implements SubmissionService {
         return;
     }
 
-
+    @Override
+    public List<SubmissionStatics> findSubmissionStatics() {
+        return submissionStaticsMapper.selectList(null);
+    }
 }

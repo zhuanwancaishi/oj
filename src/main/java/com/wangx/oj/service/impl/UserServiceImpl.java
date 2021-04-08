@@ -1,8 +1,12 @@
 package com.wangx.oj.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wangx.oj.common.Result;
+import com.wangx.oj.entity.Submission;
+import com.wangx.oj.entity.SubmissionStatics;
 import com.wangx.oj.entity.User;
+import com.wangx.oj.mapper.SubmissionMapper;
 import com.wangx.oj.mapper.UserMapper;
 import com.wangx.oj.service.UserService;
 import com.wangx.oj.utils.RedisUtils;
@@ -24,6 +28,10 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    private SubmissionMapper submissionMapper;
+
+    private static final String USER_PASS_TOTAL = "user_pass_total";
 
     @Override
     public List<User> findAll() {
@@ -88,5 +96,21 @@ public class UserServiceImpl implements UserService {
         userMapper.deleteById(uid);
     }
 
-
+    @Override
+    public Map findUserPassAndTotalSubmission(String uid) {
+        if (!redisUtils.hasKey(USER_PASS_TOTAL) || redisUtils.hmGet(USER_PASS_TOTAL, uid) == null) {
+            QueryWrapper<Submission> passWrapper = new QueryWrapper<>();
+            passWrapper.lambda().eq(Submission::getUid, uid).eq(Submission::getResult, 1);
+            Integer pass = submissionMapper.selectCount(passWrapper);
+            QueryWrapper<Submission> totalWrapper = new QueryWrapper<>();
+            totalWrapper.lambda().eq(Submission::getUid, uid);
+            Integer total = submissionMapper.selectCount(totalWrapper);
+            Map<String, Integer> map = new HashMap<>();
+            map.put("pass", pass);
+            map.put("total", total);
+            redisUtils.hmSet(USER_PASS_TOTAL, uid, map);
+        }
+        Map<String, Integer> res = (Map<String, Integer>) redisUtils.hmGet(USER_PASS_TOTAL, uid);
+        return res;
+    }
 }

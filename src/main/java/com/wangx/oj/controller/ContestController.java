@@ -18,6 +18,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -68,8 +69,8 @@ public class ContestController {
         return Result.success(pagination);
     }
     @RequestMapping(value = "/submission/{cid}", method = RequestMethod.POST)
-    public Result contestSubmission(@RequestBody Submission submission, @PathVariable String cid){
-        judgeUtils.submitContestJudge(submission, cid);
+    public Result contestSubmission(@RequestBody Submission submission, @PathVariable String cid, HttpServletRequest request){
+        judgeUtils.submitContestJudge(submission, cid, request);
         return Result.success("success");
     }
 

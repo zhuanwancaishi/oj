@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -98,6 +99,12 @@ public class UserController {
             userService.deleteUser(user.getUid());
         }
         return Result.success("success");
+    }
+
+    @RequestMapping(value = "/statics/submission/{uid}", method = RequestMethod.GET)
+    public Result findUserSubmissionPassAndTotal(@PathVariable String uid) {
+        Map res = userService.findUserPassAndTotalSubmission(uid);
+        return Result.success(res);
     }
 
 }

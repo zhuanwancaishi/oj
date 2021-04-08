@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wangx.oj.entity.User;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserService {
     List<User> findAll();
@@ -14,4 +15,5 @@ public interface UserService {
     IPage<User> findUserPagination(Integer page, Integer pageSize);
     Integer getUserCount();
     void deleteUser(String uid);
+    Map findUserPassAndTotalSubmission(String uid);
 }

@@ -3,6 +3,8 @@ package com.wangx.oj.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wangx.oj.entity.Rank;
 
+import java.util.List;
+
 public interface RankService {
-    public IPage<Rank> findRankListPagination(int page, int pageSize);
+    IPage<Rank> findRankListRedis(int page, int pageSize);
 }

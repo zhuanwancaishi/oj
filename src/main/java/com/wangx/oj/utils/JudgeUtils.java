@@ -12,6 +12,7 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -52,10 +53,11 @@ public class JudgeUtils {
      * 提交比赛答案
      * @param submission
      */
-    public void submitContestJudge(Submission submission, String cid){
+    public void submitContestJudge(Submission submission, String cid, HttpServletRequest request){
         TestCase testCase = testCaseService.findTestCaseById(submission.getPid());
         String sid = UUIDGenerator.getUUID();
         submission.setSid(sid);
+        submission.setIp(IPUtils.getIpAddress(request));
         submission.setInput(testCase.getInput());
         submission.setOutput(testCase.getOutput());
         submission.setCreateTime(new Date());
@@ -63,7 +65,7 @@ public class JudgeUtils {
         amqpTemplate.convertAndSend("judge", JSON.toJSONString(submission));
     }
 
-    public void submitJudge(Submission submission, String tid){
+    public void submitJudge(Submission submission, String tid, HttpServletRequest request){
         if (redisUtils.hasKey("submissionCount")){
             redisUtils.remove("submissionCount");
         }
@@ -76,6 +78,7 @@ public class JudgeUtils {
         redisUtils.hmSet("problemChart", submission.getPid(), null);
         TestCase testCase = testCaseService.findTestCaseById(tid);
         submission.setSid(UUIDGenerator.getUUID());
+        submission.setIp(IPUtils.getIpAddress(request));
         submission.setCreateTime(new Date());
         submission.setInput(testCase.getInput());
         submission.setOutput(testCase.getOutput());

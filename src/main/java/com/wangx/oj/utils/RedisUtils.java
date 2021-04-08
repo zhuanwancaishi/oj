@@ -238,6 +238,17 @@ public class RedisUtils {
         return zset.rangeByScore(key, scoure, scoure1);
     }
 
+    /**
+     * 获取排行列表
+     */
+    public Set<ZSetOperations.TypedTuple<String>> list(String key, int start, int end) {
+        Set<ZSetOperations.TypedTuple<String>> rangeWithScores =
+                redisTemplate.opsForZSet().reverseRangeWithScores(key, start, end);
+        return rangeWithScores;
+    }
+
+
+
     public Boolean setBit(String key, long offset, boolean tag) {
         return (Boolean) redisTemplate.execute(new RedisCallback<Boolean>() {
             @Override
