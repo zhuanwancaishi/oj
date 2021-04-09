@@ -8,4 +8,5 @@ public interface ContestService {
     IPage<Contest> findContestPagination(int page, int pageSize);
     IPage findSubmissionForContestPagination(String cid, Integer page, Integer pageSize);
     void updateContest(Contest contest);
+    void addContest(Contest contest);
 }

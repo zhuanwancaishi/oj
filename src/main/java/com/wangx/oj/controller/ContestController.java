@@ -80,5 +80,10 @@ public class ContestController {
         return Result.success("更新成功");
     }
 
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public Result addContest(@RequestBody Contest contest) {
+        contestService.addContest(contest);
+        return Result.success("添加成功");
+    }
 
 }

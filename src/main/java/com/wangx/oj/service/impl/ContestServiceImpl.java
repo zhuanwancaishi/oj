@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -44,4 +45,10 @@ public class ContestServiceImpl implements ContestService {
     public void updateContest(Contest contest) {
         contestMapper.updateById(contest);
     }
+
+    public void addContest(Contest contest) {
+        contest.setCreateDate(new Date());
+        contestMapper.insert(contest);
+    }
+
 }
