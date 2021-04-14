@@ -34,6 +34,7 @@ public class JudgeUtils {
     @Autowired
     RedisUtils redisUtils;
 
+    private static final String USER_PASS_TOTAL = "user_pass_total";
     /**
      * 重新判题
      * @param submission
@@ -66,9 +67,8 @@ public class JudgeUtils {
     }
 
     public void submitJudge(Submission submission, String tid, HttpServletRequest request){
-        if (redisUtils.hasKey("submissionCount")){
-            redisUtils.remove("submissionCount");
-        }
+        if (redisUtils.hasKey("submissionCount")) redisUtils.remove("submissionCount");
+        if (redisUtils.hasKey(USER_PASS_TOTAL)) redisUtils.remove(USER_PASS_TOTAL);
         Date dateNow = new Date();
         SimpleDateFormat smf = new SimpleDateFormat("yyyy-MM-dd");
         String sign = smf.format(dateNow).replace("-", "");

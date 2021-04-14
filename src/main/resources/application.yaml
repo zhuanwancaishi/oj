@@ -68,5 +68,11 @@ sms:
   accesskey-secret:  103xnfjqYCzoG9nqM08iaVIOAKRd3n
   sign-name: 启航实验室
   template-code: SMS_186401098
+aliyun:
+  oss:
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    accessKeyId: LTAI4G41c5QxKrwi4TQRWxeF
+    accessKeySecret: 103xnfjqYCzoG9nqM08iaVIOAKRd3n
+    bucketName: wxoj
 
 

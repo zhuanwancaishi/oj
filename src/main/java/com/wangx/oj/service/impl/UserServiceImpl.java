@@ -9,6 +9,7 @@ import com.wangx.oj.entity.User;
 import com.wangx.oj.mapper.SubmissionMapper;
 import com.wangx.oj.mapper.UserMapper;
 import com.wangx.oj.service.UserService;
+import com.wangx.oj.utils.OSSUtils;
 import com.wangx.oj.utils.RedisUtils;
 import com.wangx.oj.utils.UUIDGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -55,10 +56,6 @@ public class UserServiceImpl implements UserService {
         userMapper.InsertOne(user);
         return;
     }
-
-
-
-
 
     @Override
     public void update(User user) {

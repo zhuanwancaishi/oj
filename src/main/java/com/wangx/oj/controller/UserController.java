@@ -6,13 +6,16 @@ import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.User;
 import com.wangx.oj.service.UserService;
 
+import com.wangx.oj.utils.OSSUtils;
 import com.wangx.oj.utils.RedisUtils;
 import com.wangx.oj.utils.SmsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +35,9 @@ public class UserController {
 
     @Autowired
     private SmsUtils smsUtils;
+
+    @Autowired
+    private OSSUtils ossUtils;
 
     @RequestMapping("/findAll")
     public Result findAll(){
@@ -107,4 +113,21 @@ public class UserController {
         return Result.success(res);
     }
 
+    @RequestMapping(value = "/avatar", method = RequestMethod.POST)
+    public Result uploadAvatar(@RequestParam("file")MultipartFile file) {
+        try {
+            String url = ossUtils.uploadFile(file); //调用OSS工具类
+            return Result.success(url);
+        }
+        catch (Exception e) {
+            log.info(e.getMessage());
+            return Result.fail(CodeMsg.UPLOAD_FAIL);
+        }
+    }
+
+    @RequestMapping(value = "/avatar", method = RequestMethod.PUT)
+    public Result updateAvatar(@RequestBody User user) {
+        userService.update(user);
+        return Result.success("更新成功");
+    }
 }
