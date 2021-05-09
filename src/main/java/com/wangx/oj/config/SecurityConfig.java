@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     MyCustomUserService userService;
+
     //授权
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -72,11 +73,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().permitAll()
                 .and()
+                // 在验证用户名密码之前添加验证验证码的拦截器
                 .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
+                // 登录调用的地址
                 .formLogin().loginProcessingUrl("/login")
+                // 登录成功处理
                 .successHandler(loginSuccessHandler)
+                // 登录失败处理
                 .failureHandler(loginFailureHandler)
                 .and()
+                // 权限不足,即403时跳转页面
+                .exceptionHandling().accessDeniedHandler(loginDenyHandler).authenticationEntryPoint(new JsonAuthenticationEntryPoint())
+                .and()
+                //登出地址和的航处成功处理类
                 .logout().logoutUrl("/logout").logoutSuccessHandler(myLogoutSuccessHandler)
                 .clearAuthentication(true)
                 .and()

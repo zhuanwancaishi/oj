@@ -26,6 +26,7 @@ public class MyCustomUserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("username",username));
+        log.info("user login: " + user.toString());
         assert user!= null;
         MyUserDetails myUserDetails = new MyUserDetails();
         myUserDetails.setPassword(user.getPassword());

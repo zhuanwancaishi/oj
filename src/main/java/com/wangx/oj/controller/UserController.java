@@ -130,4 +130,15 @@ public class UserController {
         userService.update(user);
         return Result.success("更新成功");
     }
+
+
+    @RequestMapping(value = "/change/password/{oldPassword}/{newPassword}", method = RequestMethod.PUT)
+    public Result changePassword(@RequestBody User user, @PathVariable String oldPassword, @PathVariable String newPassword) {
+        CodeMsg codeMsg = userService.changePassword(user, oldPassword, newPassword);
+        if (codeMsg.equals(CodeMsg.SUCCESS)) {
+            return Result.success(codeMsg);
+        } else {
+            return Result.fail(codeMsg);
+        }
+    }
 }

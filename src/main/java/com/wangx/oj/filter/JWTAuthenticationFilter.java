@@ -4,23 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysql.cj.protocol.x.StatementExecuteOk;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.User;
 import com.wangx.oj.security.MyUserDetails;
 import com.wangx.oj.utils.IPUtils;
 import com.wangx.oj.utils.JwtTokenUtils;
-import com.wangx.oj.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,8 +32,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private RedisUtils redisUtils;
+
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
@@ -48,18 +42,21 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 从输入流中获取到登录信息
         try {
             User loginUser = new ObjectMapper().readValue(request.getInputStream(), User.class);
-
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginUser.getUsername(),
                     loginUser.getPassword()));
         } catch (JsonParseException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         } catch (JsonMappingException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
         }
         return null;
     }
+
     // 成功验证后调用的方法
     // 如果验证成功，就生成token并返回
     @Override

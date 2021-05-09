@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.wangx.oj.common.CodeMsg;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.common.ValidateCodeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Component
+@Slf4j
 public class LoginFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException ex) throws IOException, ServletException {
@@ -26,6 +28,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         PrintWriter out = response.getWriter();
         Result result;
+        log.info("login fail");
         if (ex instanceof UsernameNotFoundException || ex instanceof BadCredentialsException) {
             result = Result.fail(CodeMsg.PASSWORD_ERROR);
         } else if (ex instanceof DisabledException) {

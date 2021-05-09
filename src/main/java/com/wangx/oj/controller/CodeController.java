@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/code")
 public class CodeController {
+
     @Autowired
     DefaultKaptcha defaultKaptcha;
     @Autowired

@@ -47,6 +47,7 @@ public class SubmissionController {
 
     @Autowired
     JudgeUtils judgeUtils;
+    public static final String SCORE_RANK = "score_rank";
     private static final String STATICS_SUBMISSION = "statics_submission";
     @RequestMapping(value = "/{index}/{pageSize}", method = RequestMethod.GET)
     public Result findAllPagination(@PathVariable Integer index, @PathVariable Integer pageSize) {
@@ -81,6 +82,7 @@ public class SubmissionController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public Result sendMessage(@RequestBody Submission submission, @RequestParam String tid, HttpServletRequest request) {
+        redisUtils.remove(SCORE_RANK);
         judgeUtils.submitJudge(submission, tid, request);
         return Result.success("success");
     }

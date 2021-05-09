@@ -26,13 +26,18 @@ public class MessageConsumer {
 
     @RabbitListener(queues = "result")
     public void receive(String message) {
-        message = message.replace("\\", "");
-        message = message.substring(1, message.length() - 1);
-        log.info("result 接收消息-->" + message);
-        Submission submission = JSON.parseObject(message, Submission.class);
-        submissionService.update(submission);
-        submission = submissionService.findSubmissionById(submission.getSid());
-        log.info(submission.toString());
-        webSocketServer.sendMessageByUsername(submission.getUid(), submission.getResult().toString());
+        try {
+            message = message.replace("\\", "");
+            message = message.substring(1, message.length() - 1);
+            log.info("result 接收消息-->" + message);
+            Submission submission = JSON.parseObject(message, Submission.class);
+            submissionService.update(submission);
+            submission = submissionService.findSubmissionById(submission.getSid());
+            log.info(submission.toString());
+            webSocketServer.sendMessageByUsername(submission.getUid(), submission.getResult().toString());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
     }
 }

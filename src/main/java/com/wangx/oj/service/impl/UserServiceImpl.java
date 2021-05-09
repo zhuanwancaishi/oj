@@ -2,6 +2,7 @@ package com.wangx.oj.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wangx.oj.common.CodeMsg;
 import com.wangx.oj.common.Result;
 import com.wangx.oj.entity.Submission;
 import com.wangx.oj.entity.SubmissionStatics;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +44,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void register(User user) {
-
         // 设置用户id
         user.setUid(UUIDGenerator.getUUID());
         // md5 加密
@@ -109,5 +110,18 @@ public class UserServiceImpl implements UserService {
         }
         Map<String, Integer> res = (Map<String, Integer>) redisUtils.hmGet(USER_PASS_TOTAL, uid);
         return res;
+    }
+
+    @Override
+    public CodeMsg changePassword(User user, String oldPassword, String newPassword) {
+        User origin = userMapper.selectById(user.getUid());
+        String oldPasswordMd5 = DigestUtils.md5DigestAsHex(oldPassword.getBytes());
+        log.info("user: " + user.getUsername() + ", change password to :" + newPassword);
+        if (oldPasswordMd5.equals(origin.getPassword())) {
+            origin.setPassword(DigestUtils.md5DigestAsHex(newPassword.getBytes()));
+            update(origin);
+            return CodeMsg.SUCCESS;
+        }
+        return CodeMsg.PASSWORD_ERROR;
     }
 }

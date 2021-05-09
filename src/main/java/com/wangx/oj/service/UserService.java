@@ -1,6 +1,8 @@
 package com.wangx.oj.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.sun.org.apache.bcel.internal.classfile.Code;
+import com.wangx.oj.common.CodeMsg;
 import com.wangx.oj.entity.User;
 
 import java.util.List;
@@ -16,4 +18,5 @@ public interface UserService {
     Integer getUserCount();
     void deleteUser(String uid);
     Map findUserPassAndTotalSubmission(String uid);
+    CodeMsg changePassword(User user, String oldPassword, String newPassword);
 }
